@@ -1,6 +1,13 @@
 import Head from 'next/head'
 
-export default function Ota(ota) {
+
+export async function getStaticProps({ params }) {
+    return {
+      props: ['post'],
+    }
+  }
+
+export default function Ota({ota}) {
     return (
       <main>
         <Head>

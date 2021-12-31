@@ -1,4 +1,4 @@
-import {Ota} from '../../src/pages/ota'
+var eth_sig = require('eth-sig-util');
 
 export async function onRequestGet(context) {
     const {
@@ -11,5 +11,5 @@ export async function onRequestGet(context) {
       } = context;
 
       var ota = params.ota
-    return Ota(ota)
+    return new Response(`Hello world`);
   }

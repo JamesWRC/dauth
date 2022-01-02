@@ -28,7 +28,7 @@ export default function Otk(){
 
 
       const ethereum = window.ethereum;
-      const qrCodeURL = `${METAMASK_BASE_LINK}/dauth.dev/otk/${otk}?mobile=true`
+      const qrCodeURL = `${METAMASK_BASE_LINK}/dauth.dev/auth/?otk=${otk}&mobile=true`
       QRCode.toCanvas(document.getElementById('authQRCodeCanvas'), qrCodeURL, { errorCorrectionLevel: 'H' }, function (err, url) {
       })
       if (ethereum && userOnMobile === "t") {

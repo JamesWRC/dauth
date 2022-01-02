@@ -5,7 +5,7 @@ import {
   Route
 } from "react-router-dom";
 import Home from "./pages/home";
-import Ota from "./pages/otk";
+import Otk from "./pages/otk";
 // import Invoices from "./routes/invoices";
 
 const rootElement = document.getElementById("root");
@@ -14,8 +14,8 @@ render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/ota" element={<Ota />}>
-        <Route path=":ota" element={<Ota />} />
+      <Route path="/auth" element={<Otk />}>
+        <Route path=":otk" element={<Otk />} />
       </Route>
     </Routes>
   </BrowserRouter>,

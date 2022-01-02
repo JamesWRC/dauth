@@ -12,7 +12,7 @@ const WEB_SOCKET = 'prod-dauth-backend.us-east-1.elasticbeanstalk.com'
 
 
 
-export default function Ota(){
+export default function Otk(){
 
     const [searchParams, setSearchParams] = useSearchParams()
     var userOnMobile = searchParams.get("mobile")
@@ -49,8 +49,6 @@ export default function Ota(){
             method: 'personal_sign',
             params: [msg, from, 'Example password'],
           });
-          alert(sign);
-          console.log(sign);
 
           fetch('https://api.dauth.dev/walletAuth', {
             method: 'POST',
@@ -76,6 +74,7 @@ export default function Ota(){
 
       }
     })
+
     return (
         <div className="App">
           <Helmet>

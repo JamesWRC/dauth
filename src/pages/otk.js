@@ -4,25 +4,25 @@ import { Helmet } from "react-helmet"
 import { ethers } from "ethers";
 import { Buffer } from "buffer"
 import QRCode from 'qrcode'
-import { w3cwebsocket as W3CWebSocket } from "websocket";
+// import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 const { v4: uuidv4 } = require('uuid');
 const METAMASK_BASE_LINK = 'https://metamask.app.link/dapp/';
-const WEB_SOCKET = 'prod-dauth-backend.us-east-1.elasticbeanstalk.com/ws'
+const WEB_SOCKET = 'prod-dauth-backend.us-east-1.elasticbeanstalk.com'
 
-// var Eth = require('ethjs')
-// window.Eth = Eth
+
+
 export default function Ota(){
-    let { otk } = useParams();
-    if(!otk){
-      otk = uuidv4()
-    }
+
     const [searchParams, setSearchParams] = useSearchParams()
     var userOnMobile = searchParams.get("mobile")
-
+    var otk = searchParams.get("otk")
+    if(otk == undefined){
+      otk = uuidv4()
+    }
     useEffect(async () => {
 
-      const client = new W3CWebSocket(`ws://${WEB_SOCKET}/${otk}`);
+      // const client = new W3CWebSocket(`ws://${WEB_SOCKET}/ws/${otk}`);
 
       console.log('Init web3')
 
@@ -30,11 +30,9 @@ export default function Ota(){
       const ethereum = window.ethereum;
       const qrCodeURL = `${METAMASK_BASE_LINK}/dauth.dev/otk/${otk}?mobile=true`
       QRCode.toCanvas(document.getElementById('authQRCodeCanvas'), qrCodeURL, { errorCorrectionLevel: 'H' }, function (err, url) {
-        // console.log(url)
       })
       if (ethereum && userOnMobile === "t") {
 
-        // alert('MetaMask is installed!');
         try{
           const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
           const account = accounts[0];
@@ -42,12 +40,11 @@ export default function Ota(){
           var from = account
           var provider = new ethers.providers.Web3Provider(ethereum);
           var signer = provider.getSigner();
-          // var NONCE = uuidv4()
-          // var NONCE = 'dfc25738-cf54-4a48-bfbb-4c4b0d9aced7'
+
           const exampleMessage = 'Test `personal_sign` message, with NONCE: ' +  String(otk);
 
           const msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`;
-          // const msg = `0231456342`;
+
           const sign = await ethereum.request({
             method: 'personal_sign',
             params: [msg, from, 'Example password'],
@@ -72,11 +69,9 @@ export default function Ota(){
         .catch(error =>{
             console.log(error)
         })
-          // personalSignVerify.disabled = false;
 
         } catch (err) {
           console.error(err);
-          // personalSign.innerHTML = `Error: ${err.message}`;
         }
 
       }
@@ -92,7 +87,6 @@ export default function Ota(){
             <canvas id="authQRCodeCanvas"></canvas>
 
               Your ota is {otk}
-               {/* Your ota is {props} */}
             </p>
 
             <a

@@ -5,7 +5,7 @@ import {
   Route
 } from "react-router-dom";
 import Home from "./pages/home";
-import Ota from "./pages/ota";
+import Ota from "./pages/otk";
 // import Invoices from "./routes/invoices";
 
 const rootElement = document.getElementById("root");

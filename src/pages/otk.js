@@ -8,7 +8,7 @@ import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 const { v4: uuidv4 } = require('uuid');
 const METAMASK_BASE_LINK = 'https://metamask.app.link/dapp';
-const WEB_SOCKET = 'test.dauth.dev'
+const WEB_SOCKET = 'prod.soc.dauth.dev'
 
 
 

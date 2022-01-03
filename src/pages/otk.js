@@ -22,7 +22,7 @@ export default function Otk(){
     }
     useEffect(async () => {
 
-      const ws = new W3CWebSocket(`ws://${WEB_SOCKET}/ws/${otk}`);
+      const ws = new W3CWebSocket(`wss://${WEB_SOCKET}/ws/${otk}`);
 
       ws.onmessage = function (event) {
         const json = JSON.parse(event.data);

@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet"
 import { ethers } from "ethers";
 import { Buffer } from "buffer"
 import QRCode from 'qrcode'
-// import { w3cwebsocket as W3CWebSocket } from "websocket";
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 const { v4: uuidv4 } = require('uuid');
 const METAMASK_BASE_LINK = 'https://metamask.app.link/dapp';
@@ -15,20 +15,34 @@ const WEB_SOCKET = 'prod-dauth-backend.us-east-1.elasticbeanstalk.com'
 export default function Otk(){
 
     const [searchParams, setSearchParams] = useSearchParams()
-    var userOnMobile = searchParams.get("mobile")
-    var otk = searchParams.get("otk")
+    var userOnMobile = searchParams.get("m") // if users i using mobile to authenticate
+    var otk = searchParams.get("otk") // get the one time key
     if(otk == undefined){
       otk = uuidv4()
     }
     useEffect(async () => {
 
-      // const client = new W3CWebSocket(`ws://${WEB_SOCKET}/ws/${otk}`);
+      const ws = new W3CWebSocket(`ws://${WEB_SOCKET}/ws/${otk}`);
 
+      ws.onmessage = function (event) {
+        const json = JSON.parse(event.data);
+        console.log(`[message] Data received from server: ${json}`);
+        try {
+        if ((json.event = "data")) {
+        
+                console.log(json.data);
+              }
+            } catch (err) {
+              // whatever you wish to do with the err
+              console.log(err)
+            }
+        
+        };
       console.log('Init web3')
 
 
       const ethereum = window.ethereum;
-      const qrCodeURL = `${METAMASK_BASE_LINK}/dauth.dev/auth/?otk=${otk}&mobile=true`
+      const qrCodeURL = `${METAMASK_BASE_LINK}/dauth.dev/auth/?m=t&otk=${otk}`
       QRCode.toCanvas(document.getElementById('authQRCodeCanvas'), qrCodeURL, { errorCorrectionLevel: 'H' }, function (err, url) {
       })
       if (ethereum && userOnMobile === "t") {

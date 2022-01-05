@@ -27,6 +27,8 @@ export default function Otk(){
       ws.onmessage = function (event) {
         const json = JSON.parse(event.data);
         console.log(`[message] Data received from server: ${json}`);
+        alert(json)
+        alert(JSON.stringify(json))
         try {
         if ((json.event = "data")) {
         
@@ -80,7 +82,7 @@ export default function Otk(){
           .then(async (data) => {
             console.log(data)
             alert(JSON.stringify(data))
-            alert(data.JWT)
+            alert(data.authResult.JWT)
             // validate Auth
             await verifyAuth(data.authResult.JWT)
           }).catch(error =>{

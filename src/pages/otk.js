@@ -126,7 +126,7 @@ async function verifyAuth(jwt){
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              JWT: otk,
+              JWT: jwt,
             })
           }).then(response => response.json())
           .then(data => {

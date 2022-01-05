@@ -77,8 +77,10 @@ export default function Otk(){
               signedMessage: sign
             })
           }).then(response => response.json())
-          .then(data => console.log(data))
-        .catch(error =>{
+          .then(data => {
+            // validate Auth
+            await verifyAuth(data.JWT)
+          }).catch(error =>{
             console.log(error)
         })
 
@@ -113,4 +115,23 @@ export default function Otk(){
           </header>
         </div>
       );
+}
+
+
+async function verifyAuth(jwt){
+  fetch('https://api.dauth.dev/verifyAuth', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              JWT: otk,
+            })
+          }).then(response => response.json())
+          .then(data => {
+            alert(data.tokenValid)
+          }).catch(error =>{
+            console.log(error)
+        })
 }

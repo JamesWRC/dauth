@@ -77,7 +77,7 @@ export default function Otk(){
               signedMessage: sign
             })
           }).then(response => response.json())
-          .then(data => {
+          .then(async (data) => {
             // validate Auth
             await verifyAuth(data.JWT)
           }).catch(error =>{

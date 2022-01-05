@@ -33,6 +33,7 @@ export default function Otk(){
         if ((json.event = "data")) {
         
                 console.log(json.data);
+
               }
             } catch (err) {
               // whatever you wish to do with the err
@@ -81,8 +82,6 @@ export default function Otk(){
           }).then(response => response.json())
           .then(async (data) => {
             console.log(data)
-            alert(JSON.stringify(data))
-            alert(data.authResult.JWT)
             // validate Auth
             await verifyAuth(data.authResult.JWT)
           }).catch(error =>{

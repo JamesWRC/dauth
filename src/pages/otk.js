@@ -29,7 +29,8 @@ export default function Otk() {
       console.log(`Data received from server web socket: ${JSON.stringify(json)}`);
 
       // validate Auth
-      await verifyAuth(json.payload.JWT)
+      const validJWT = await verifyAuth(json.payload.JWT)
+      alert(validJWT)
 
     };
     console.log('Init web3')

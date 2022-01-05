@@ -79,6 +79,8 @@ export default function Otk(){
           }).then(response => response.json())
           .then(async (data) => {
             console.log(data)
+            alert(data)
+            alert(data.JWT)
             // validate Auth
             await verifyAuth(data.JWT)
           }).catch(error =>{

@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import Home from "./pages/home";
 import Otk from "./pages/otk";
+import SignUp from './components/SignUp'
 // import Invoices from "./routes/invoices";
 
 const rootElement = document.getElementById("root");
@@ -16,6 +17,8 @@ render(
       <Route path="/" element={<Home />} />
       <Route path="/auth" element={<Otk />}>
         <Route path=":otk" element={<Otk />} />
+      </Route>
+      <Route path="/signup" element={<SignUp />}>
       </Route>
     </Routes>
   </BrowserRouter>,

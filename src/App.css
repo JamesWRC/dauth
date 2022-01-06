@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+.card{
+  transition: transform 1s;
+  transform-style: preserve-3d;
+}
+
+.card-face{
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.card-back{
+  transform: rotateY( 180deg );
+}
+
+.card.is-flipped {
+  transform: rotateY(180deg);
+}

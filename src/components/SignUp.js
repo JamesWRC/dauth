@@ -64,17 +64,21 @@ export default function SignUp() {
   var userOnMobile = searchParams.get("m") // if users i using mobile to authenticate
   var otk = searchParams.get("otk") // get the one time key
   const navigate = useNavigate();
-
+  if(!otk){
+    otk = uuidv4()
+  }
 
 
   
 
   useEffect(async () => {
-    if (!currOtk) {
-      otk = uuidv4()
-      setCurrOtk(otk)
-      // navigate(`?otk=${otk}`, { replace: true });
-    }
+    // if(otk){
+    //   setCurrOtk(otk)
+    // }else if (!currOtk) {
+    //   otk = uuidv4()
+    //   setCurrOtk(otk)
+    //   // navigate(`?otk=${otk}`, { replace: true });
+    // }
 
     var ethereum = window.ethereum
 
@@ -128,7 +132,6 @@ export default function SignUp() {
         .then(async (data) => {
           console.log(data)
           console.log(data.authResult.logInSuccess)
-          console.log(data.authResult.signupMessage)
           if(data.authResult.logInSuccess || data.authResult.signupMessage === "Wallet already signed up. Sign in in instead.."){
             setSignUpStep(4)
             await sendMessage(otk, {'mobileLoginSuccess':true}, userOnMobile)
@@ -363,7 +366,7 @@ export default function SignUp() {
 
             <dd className="font-medium text-gray-900 truncate">
               <dt className="text-gray-500">One Time Key (OTK)&nbsp;</dt>
-              <dd className="font-medium text-gray-900 text-ellipsis overflow-hidden">{currOtk}</dd>
+              <dd className="font-medium text-gray-900 text-ellipsis overflow-hidden">{otk}</dd>
             </dd>
           </dl>
           {/* <div className="mt-4 sm:mt-0 left">

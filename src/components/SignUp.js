@@ -58,23 +58,31 @@ export default function SignUp() {
 
   const [wallet, setWallet] = useState("Couldn't connect to MetaMask...")
   const [showQRCode, setShowQRCode] = useState(false)
-
+  const [currOtk, setCurrOtk] = useState(null)
+  
   const [searchParams, setSearchParams] = useSearchParams()
   var userOnMobile = searchParams.get("m") // if users i using mobile to authenticate
   var otk = searchParams.get("otk") // get the one time key
   const navigate = useNavigate();
 
-  if (otk == undefined) {
-    otk = uuidv4()
-  }
+
+
+  
 
   useEffect(async () => {
+    if (!currOtk) {
+      otk = uuidv4()
+      setCurrOtk(otk)
+      // navigate(`?otk=${otk}`, { replace: true });
+    }
 
     var ethereum = window.ethereum
 
 
     async function signMessage(ethereum, otk) {
-
+      if(!otk){
+        return
+      }
       const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
       if (signUpStep < 1) {
         await sendMessage(otk, {'mobileSignRequest':true}, userOnMobile)
@@ -96,7 +104,7 @@ export default function SignUp() {
       });
       setSignUpStep(2)
       await sendMessage(otk, {'mobileSignedMessage':true}, userOnMobile)
-
+      var walletUsed = ''
       await sendSignedMessage(otk, walletUsed, rawMessage, signedMessage)
 
     }
@@ -191,7 +199,6 @@ export default function SignUp() {
       //   setSignUpStep(0)
       //   return
       // }
-      var sign
       if (signUpStep == 0) {
         await signMessage(ethereum, otk)
       }
@@ -209,15 +216,25 @@ export default function SignUp() {
         window.location.reload();
       });
     }else{
-      const ws = new W3CWebSocket(`wss://${WEB_SOCKET}/ws/${otk}`);
+      var ws = new W3CWebSocket(`wss://${WEB_SOCKET}/ws/${otk}`);
+
       ws.onmessage = async function (event) {
         const json = JSON.parse(event.data);
         console.log(`Data received from server web socket: ${JSON.stringify(json)}`);
-  
+        
+        if(json.payload.msg.mobileConnected === true){
+          setSignUpStep(0.05)
+        }else if(json.payload.msg.mobileSignRequest === true){
+          setSignUpStep(1)
+        }else if(json.payload.msg.mobileSignedMessage === true){
+          setSignUpStep(2)
+        }else if(json.payload.logInSuccess === true){
+          setSignUpStep(4)
+        }
         // validate Auth
         // console.log(validJWT) 
         
-      };
+      }
     }
 
 
@@ -313,7 +330,7 @@ export default function SignUp() {
 
 
     }
-  }, [showQRCode, signUpStep])
+  }, [showQRCode, signUpStep, currOtk])
 
 
 
@@ -345,7 +362,7 @@ export default function SignUp() {
 
             <dd className="font-medium text-gray-900 truncate">
               <dt className="text-gray-500">One Time Key (OTK)&nbsp;</dt>
-              <dd className="font-medium text-gray-900 text-ellipsis overflow-hidden">{otk}</dd>
+              <dd className="font-medium text-gray-900 text-ellipsis overflow-hidden">{currOtk}</dd>
             </dd>
           </dl>
           {/* <div className="mt-4 sm:mt-0 left">

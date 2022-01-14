@@ -67,6 +67,8 @@ export default function SignUp() {
   if(!otk){
     otk = uuidv4()
   }
+  navigate(`?otk=${otk}`, { replace: true });
+
 
 
   
@@ -77,7 +79,7 @@ export default function SignUp() {
     // }else if (!currOtk) {
     //   otk = uuidv4()
     //   setCurrOtk(otk)
-    //   // navigate(`?otk=${otk}`, { replace: true });
+      // navigate(`?otk=${otk}`, { replace: true });
     // }
 
     var ethereum = window.ethereum

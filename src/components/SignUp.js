@@ -77,6 +77,8 @@ export default function SignUp() {
 
       const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
       if (signUpStep < 1) {
+        await sendMessage(otk, {'mobileSignRequest':true}, userOnMobile)
+
         setSignUpStep(1)
       }
       const account = accounts[0];

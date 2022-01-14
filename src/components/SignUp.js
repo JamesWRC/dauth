@@ -128,6 +128,7 @@ export default function SignUp() {
         .then(async (data) => {
           console.log(data)
           console.log(data.authResult.logInSuccess)
+          console.log(data.authResult.signupMessage)
           if(data.authResult.logInSuccess || data.authResult.signupMessage === "Wallet already signed up. Sign in in instead.."){
             setSignUpStep(4)
             await sendMessage(otk, {'mobileLoginSuccess':true}, userOnMobile)

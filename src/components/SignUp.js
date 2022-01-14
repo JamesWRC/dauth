@@ -93,6 +93,7 @@ export default function SignUp() {
         params: [msg, from, 'Example password'],
       });
       setSignUpStep(2)
+      sendMessage(otk, {'mobileSignedMessage':true}, userOnMobile)
 
       await sendSignedMessage(otk, walletUsed, rawMessage, signedMessage)
 
@@ -119,7 +120,8 @@ export default function SignUp() {
           console.log(data.authResult.logInSuccess)
           if(data.authResult.logInSuccess){
             setSignUpStep(4)
-            
+            sendMessage(otk, {'mobileLoginSuccess':true}, userOnMobile)
+
           function timeout(delay) {
               return new Promise( res => setTimeout(res, delay) );
           }
@@ -135,13 +137,35 @@ export default function SignUp() {
     }
 
 
+    async function sendMessage(otk, message, userOnMobile){
+      if(userOnMobile !== 't'){
+        return
+      }
+      await fetch('https://api.dauth.dev/msg', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          OTK: otk,
+          message: message,
+        })
+      }).then(response => response.json())
+        .then(async (data) => {
+          console.log(data)
+        }).catch(error => {
+          console.log(error)
+        })
+    }
+
+
 
     if (ethereum || (ethereum && userOnMobile === "t")) {
-
       var provider = new ethers.providers.Web3Provider(ethereum);
       var currNetwork = await provider.getNetwork()
       showMask()
-
+      
       console.log(currNetwork.name)
       console.log(currNetwork.chainId)
 
@@ -154,6 +178,7 @@ export default function SignUp() {
         var walletUsed = accounts[0];
         setWallet(walletUsed)
       }
+      sendMessage(otk, {'mobileConnected':true}, userOnMobile)
 
       // if (currNetwork.chainId !== 42) {
       //   setSignUpStep(0)

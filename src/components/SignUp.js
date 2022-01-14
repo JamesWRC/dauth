@@ -128,7 +128,7 @@ export default function SignUp() {
         .then(async (data) => {
           console.log(data)
           console.log(data.authResult.logInSuccess)
-          if(data.authResult.logInSuccess){
+          if(data.authResult.logInSuccess || data.authResult.signupMessage === "Wallet already signed up. Sign in in instead.."){
             setSignUpStep(4)
             await sendMessage(otk, {'mobileLoginSuccess':true}, userOnMobile)
 
@@ -216,7 +216,7 @@ export default function SignUp() {
         window.location.reload();
       });
     }else if(!ethereum){
-      var ws = new W3CWebSocket(`wss://${WEB_SOCKET}/ws/${otk}`);
+      var ws = new W3CWebSocket(`wss://${WEB_SOCKET}/ws/${currOtk}`);
 
       ws.onmessage = async function (event) {
         const json = JSON.parse(event.data);

@@ -71,7 +71,8 @@ export default function Otk() {
             OTK: otk,
             fromWallet: account,
             rawMessage: exampleMessage,
-            signedMessage: sign
+            signedMessage: sign,
+            method: 'login'
           })
         }).then(response => response.json())
           .then(async (data) => {

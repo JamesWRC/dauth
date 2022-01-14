@@ -2,129 +2,48 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { MenuIcon, SearchIcon, ShoppingCartIcon, UserIcon, XIcon } from '@heroicons/react/outline'
+import { useNavigate } from "react-router-dom";
+
+
 import $ from 'jquery';
 import { useSearchParams, useParams } from "react-router-dom";
 import QRCode from 'qrcode'
+import { ethers } from "ethers";
+import { Buffer } from "buffer"
+
 
 import { CheckCircleIcon, QrcodeIcon } from '@heroicons/react/solid'
 import metamaskLogo from '../metamask.svg'
+import { w3cwebsocket as W3CWebSocket } from "websocket";
+
 const { v4: uuidv4 } = require('uuid');
 
 const ModelViewer = require('@metamask/logo');
 const METAMASK_BASE_LINK = 'https://metamask.app.link/dapp';
+const WEB_SOCKET = 'socket.dauth.dev'
 
-
-const currencies = ['CAD', 'USD', 'AUD', 'EUR', 'GBP']
-const navigation = {
-  categories: [
-    {
-      name: 'Women',
-      featured: [
-        { name: 'Sleep', href: '#' },
-        { name: 'Swimwear', href: '#' },
-        { name: 'Underwear', href: '#' },
-      ],
-      collection: [
-        { name: 'Everything', href: '#' },
-        { name: 'Core', href: '#' },
-        { name: 'New Arrivals', href: '#' },
-        { name: 'Sale', href: '#' },
-      ],
-      categories: [
-        { name: 'Basic Tees', href: '#' },
-        { name: 'Artwork Tees', href: '#' },
-        { name: 'Bottoms', href: '#' },
-        { name: 'Underwear', href: '#' },
-        { name: 'Accessories', href: '#' },
-      ],
-      brands: [
-        { name: 'Full Nelson', href: '#' },
-        { name: 'My Way', href: '#' },
-        { name: 'Re-Arranged', href: '#' },
-        { name: 'Counterfeit', href: '#' },
-        { name: 'Significant Other', href: '#' },
-      ],
-    },
-    {
-      name: 'Men',
-      featured: [
-        { name: 'Casual', href: '#' },
-        { name: 'Boxers', href: '#' },
-        { name: 'Outdoor', href: '#' },
-      ],
-      collection: [
-        { name: 'Everything', href: '#' },
-        { name: 'Core', href: '#' },
-        { name: 'New Arrivals', href: '#' },
-        { name: 'Sale', href: '#' },
-      ],
-      categories: [
-        { name: 'Artwork Tees', href: '#' },
-        { name: 'Pants', href: '#' },
-        { name: 'Accessories', href: '#' },
-        { name: 'Boxers', href: '#' },
-        { name: 'Basic Tees', href: '#' },
-      ],
-      brands: [
-        { name: 'Significant Other', href: '#' },
-        { name: 'My Way', href: '#' },
-        { name: 'Counterfeit', href: '#' },
-        { name: 'Re-Arranged', href: '#' },
-        { name: 'Full Nelson', href: '#' },
-      ],
-    },
-  ],
-  pages: [
-    { name: 'Company', href: '#' },
-    { name: 'Stores', href: '#' },
-  ],
-}
 const products = [
   {
     id: 1,
-    name: 'Distant Mountains Artwork Tee',
-    price: '$36.00',
-    description: 'You awake in a new, mysterious land. Mist hangs low along the distant mountains. What does it mean?',
-    address: ['Floyd Miles', '7363 Cynthia Pass', 'Toronto, ON N3Y 4H8'],
+    name: 'Dauth Signup Example',
+    price: '',
+    description: 'Signup using your Metamask wallet!',
+    address: ['https://tailwindui.com/img/ecommerce-images/confirmation-page-04-product-01.jpg', '7363 Cynthia Pass', 'Toronto, ON N3Y 4H8'],
     email: 'f•••@example.com',
     phone: '1•••••••••40',
     href: '#',
-    status: 'Processing',
-    step: 3,
-    date: 'March 24, 2021',
+    status: 'Sign up process...',
     datetime: '2021-03-24',
     imageSrc: 'https://tailwindui.com/img/ecommerce-images/confirmation-page-04-product-01.jpg',
     imageAlt: 'Off-white t-shirt with circular dot illustration on the front of mountain ridges that fade.',
+    signupStep: [{
+      heading: 'Connect to the Kovan test network',
+      description: "Open Metamask, and change the network to 'Kovan' test network.",
+      comp: null
+    }]
   },
   // More products...
 ]
-const footerNavigation = {
-  account: [
-    { name: 'Manage Account', href: '#' },
-    { name: 'Saved Items', href: '#' },
-    { name: 'Orders', href: '#' },
-    { name: 'Redeem Gift card', href: '#' },
-  ],
-  service: [
-    { name: 'Shipping & Returns', href: '#' },
-    { name: 'Warranty', href: '#' },
-    { name: 'FAQ', href: '#' },
-    { name: 'Find a store', href: '#' },
-    { name: 'Get in touch', href: '#' },
-  ],
-  company: [
-    { name: 'Who we are', href: '#' },
-    { name: 'Press', href: '#' },
-    { name: 'Careers', href: '#' },
-    { name: 'Terms & Conditions', href: '#' },
-    { name: 'Privacy', href: '#' },
-  ],
-  connect: [
-    { name: 'Instagram', href: '#' },
-    { name: 'Pinterest', href: '#' },
-    { name: 'Twitter', href: '#' },
-  ],
-}
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -133,52 +52,158 @@ function classNames(...classes) {
 
 
 
-
 export default function SignUp() {
   const [open, setOpen] = useState(false)
+  const [signUpStep, setSignUpStep] = useState(0)
+
   const [wallet, setWallet] = useState("Couldn't connect to MetaMask...")
   const [showQRCode, setShowQRCode] = useState(false)
 
   const [searchParams, setSearchParams] = useSearchParams()
   var userOnMobile = searchParams.get("m") // if users i using mobile to authenticate
   var otk = searchParams.get("otk") // get the one time key
+  const navigate = useNavigate();
+
   if (otk == undefined) {
     otk = uuidv4()
   }
 
   useEffect(async () => {
-    
+
     var ethereum = window.ethereum
 
 
-    if(ethereum){
+    async function signMessage(ethereum, otk) {
+
+      const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+      if (signUpStep < 1) {
+        setSignUpStep(1)
+      }
+      const account = accounts[0];
+      console.log(account)
+      var from = account
+
+
+      const rawMessage = 'Test `personal_sign` message, with NONCE: ' + String(otk);
+
+      const msg = `0x${Buffer.from(rawMessage, 'utf8').toString('hex')}`;
+
+      const signedMessage = await ethereum.request({
+        method: 'personal_sign',
+        params: [msg, from, 'Example password'],
+      });
+      setSignUpStep(2)
+
+      await sendSignedMessage(otk, walletUsed, rawMessage, signedMessage)
+
+    }
+
+    async function sendSignedMessage(otk, walletUsed, rawMessage, signedMessage) {
+      await fetch('https://api.dauth.dev/walletAuth', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          OTK: otk,
+          fromWallet: walletUsed,
+          rawMessage: rawMessage,
+          signedMessage: signedMessage,
+          method: 'signup'
+
+        })
+      }).then(response => response.json())
+        .then(async (data) => {
+          console.log(data)
+          console.log(data.authResult.logInSuccess)
+          if(data.authResult.logInSuccess){
+            setSignUpStep(4)
+            
+          function timeout(delay) {
+              return new Promise( res => setTimeout(res, delay) );
+          }
+          await timeout(1000); //for 1 sec delay
+
+            navigate("/?s=success", { replace: true });
+
+          }
+
+        }).catch(error => {
+          console.log(error)
+        })
+    }
+
+
+
+    if (ethereum || (ethereum && userOnMobile === "t")) {
+
+      var provider = new ethers.providers.Web3Provider(ethereum);
+      var currNetwork = await provider.getNetwork()
       showMask()
-      if(ethereum.isConnected()){
+
+      console.log(currNetwork.name)
+      console.log(currNetwork.chainId)
+
+      if (ethereum.isConnected()) {
         const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
         var walletUsed = accounts[0];
         setWallet(walletUsed)
-      }else{
+      } else {
         const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
         var walletUsed = accounts[0];
         setWallet(walletUsed)
       }
+
+      // if (currNetwork.chainId !== 42) {
+      //   setSignUpStep(0)
+      //   return
+      // }
+      var sign
+      if (signUpStep == 0) {
+        await signMessage(ethereum, otk)
+      }
       ethereum.on('accountsChanged', (accounts) => {
         setWallet(accounts[0])
-      });   
-    }
-      
-      showMobileQRCode()
-    
+        if (signUpStep < 0.05) {
+          setSignUpStep(0.05)
+        }
+        window.location.reload();
+      });
 
-    function showMobileQRCode(){
-      const qrCodeURL = `${METAMASK_BASE_LINK}/dauth.dev/auth/?m=t&otk=${otk}`
+
+      // On chain / network changed
+      ethereum.on('chainChanged', (chainId) => {
+        window.location.reload();
+      });
+    }else{
+      const ws = new W3CWebSocket(`wss://${WEB_SOCKET}/ws/${otk}`);
+      ws.onmessage = async function (event) {
+        const json = JSON.parse(event.data);
+        console.log(`Data received from server web socket: ${JSON.stringify(json)}`);
+  
+        // validate Auth
+        // console.log(validJWT) 
+        
+      };
+    }
+
+
+
+
+
+    showMobileQRCode()
+
+
+    function showMobileQRCode() {
+      const qrCodeURL = `${METAMASK_BASE_LINK}/dauth.dev/signup/?m=t&otk=${otk}`
       const qrCodeParent = $("#metamask-logo-parent");
-        QRCode.toCanvas(document.getElementById('authQRCodeCanvas'), qrCodeURL, { 
-          errorCorrectionLevel: 'H',
-          width:qrCodeParent.width(),
-          height:qrCodeParent.height(),
-          margin: 9
-        }, function (err, url) {
+      QRCode.toCanvas(document.getElementById('authQRCodeCanvas'), qrCodeURL, {
+        errorCorrectionLevel: 'H',
+        width: qrCodeParent.width(),
+        height: qrCodeParent.height(),
+        margin: 9
+      }, function (err, url) {
       })
     }
 
@@ -210,9 +235,9 @@ export default function SignUp() {
       var child = $("div").find("svg")
 
       var qrCodeCanvas = $("#authQRCodeCanvas")
-      if(showQRCode ){
+      if (showQRCode) {
         qrCodeCanvas.addClass('z-10')
-      }else if(qrCodeCanvas.hasClass('z-10')){
+      } else if (qrCodeCanvas.hasClass('z-10')) {
         qrCodeCanvas.removeClass('z-0')
       }
       if (child.width() >= 450) {
@@ -249,20 +274,20 @@ export default function SignUp() {
             child.removeClass('overflow-visible')
           }
         }
-      
-      setShowQRCode(false)
+
+        setShowQRCode(false)
       }
       window.addEventListener('resize', reportWindowSize);
 
 
     }
-  },[showQRCode])
+  }, [showQRCode, signUpStep])
 
 
 
   return (
     <div className="bg-white">
-      <main className="max-w-7xl mx-auto px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+      <main className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">Sign Up</h1>
 
         <div className="text-sm border-b border-gray-200 mt-2 pb-5 sm:flex sm:justify-between">
@@ -308,25 +333,25 @@ export default function SignUp() {
                 key={product.id}
                 className="grid grid-cols-1 text-sm sm:grid-rows-1 sm:grid-cols-12 sm:gap-x-6 md:gap-x-8 lg:gap-x-8"
               >
-                
+
                 <div className="sm:col-span-4 md:col-span-5 md:row-end-2 md:row-span-2 relative">
-                <div className="ml-4 flex-shrink-0 flow-root flex justify-end absolute z-40 right-0 p-3">
-                            <button
-                              type="button"
-                              className="-m-2.5 p-2.5 flex items-center justify-center text-gray-400 hover:text-gray-500"
-                              onClick={()=>{setShowQRCode(!showQRCode)}}
-                            >
-                              <span className="sr-only">Remove</span>
-                              {!showQRCode ?
-                               <QrcodeIcon className={window.ethereum ? "h-6 w-6 z-20" : "hidden"} aria-hidden="true" />
-                               :
-                               <img width="25px" height="25px" src={metamaskLogo} className={window.ethereum ? "MetaMask-logo z-20" : "hidden"} alt="logo" />
-                              }
-                            </button>
-                          </div>
+                  <div className="ml-4 flex-shrink-0 flow-root flex justify-end absolute z-40 right-0 p-3">
+                    <button
+                      type="button"
+                      className="-m-2.5 p-2.5 flex items-center justify-center text-gray-400 hover:text-gray-500"
+                      onClick={() => { setShowQRCode(!showQRCode) }}
+                    >
+                      <span className="sr-only">Remove</span>
+                      {!showQRCode ?
+                        <QrcodeIcon className={window.ethereum ? "h-6 w-6 z-20" : "hidden"} aria-hidden="true" />
+                        :
+                        <img width="25px" height="25px" src={metamaskLogo} className={window.ethereum ? "MetaMask-logo z-20" : "hidden"} alt="logo" />
+                      }
+                    </button>
+                  </div>
                   <div className="aspect-w-1 aspect-h-1 bg-gray-50 rounded-lg overflow-hidden border border-transparent shadow-xl" id="metamask-logo-parent">
-                    <div alt="metamask-logo" className={"object-center object-cover w-fit h-fit -mt-4"}  id="metamask-logo" />
-                    
+                    <div alt="metamask-logo" className={"object-center object-cover w-fit h-fit -mt-4"} id="metamask-logo" />
+
                     <canvas id="authQRCodeCanvas" className={!window.ethereum || (showQRCode) ? "block w-fit h-fit" : "hidden"}></canvas>
 
                   </div>
@@ -335,20 +360,20 @@ export default function SignUp() {
                   <h3 className="text-lg font-medium text-gray-900">
                     <a href={product.href}>{product.name}</a>
                   </h3>
-                  <p className="font-medium text-gray-900 mt-1">{product.price}</p>
                   <p className="text-gray-500 mt-3">{product.description}</p>
                 </div>
                 <div className="sm:col-span-12 md:col-span-7">
-                  <dl className="grid grid-cols-1 gap-y-8 border-b py-8 border-gray-200 sm:grid-cols-2 sm:gap-x-6 sm:py-6 md:py-10">
+                  <dl className="grid grid-cols-1 gap-y-8 border-b py-8 border-gray-200 sm:gap-x-6 sm:py-6 md:py-10">
                     <div>
-                      <dt className="font-medium text-gray-900">Delivery address</dt>
+                      <dt className="font-medium text-gray-900">{product.signupStep[0].heading}</dt>
                       <dd className="mt-3 text-gray-500">
-                        <span className="block">{product.address[0]}</span>
-                        <span className="block">{product.address[1]}</span>
-                        <span className="block">{product.address[2]}</span>
+                        <span className="block">{product.signupStep[0].description}</span>
+                        <span className="block">{product.signupStep[0].url}</span>
+                        {product.signupStep[0].comp !== null ? product.signupStep[0].comp : null}
+
                       </dd>
                     </div>
-                    <div>
+                    {/* <div>
                       <dt className="font-medium text-gray-900">Shipping updates</dt>
                       <dd className="mt-3 text-gray-500 space-y-3">
                         <p>{product.email}</p>
@@ -357,28 +382,34 @@ export default function SignUp() {
                           Edit
                         </button>
                       </dd>
-                    </div>
+                    </div> */}
                   </dl>
-                  <p className="font-medium text-gray-900 mt-6 md:mt-10">
-                    {product.status} on <time dateTime={product.datetime}>{product.date}</time>
-                  </p>
-                  <div className="mt-6">
-                    <div className="bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-2 bg-indigo-600 rounded-full"
-                        style={{ width: `calc((${product.step} * 2 + 1) / 8 * 100%)` }}
-                      />
-                    </div>
-                    <div className="hidden sm:grid grid-cols-4 font-medium text-gray-600 mt-6">
-                      <div className="text-indigo-600">Order placed</div>
-                      <div className={classNames(product.step > 0 ? 'text-indigo-600' : '', 'text-center')}>
-                        Processing
+                  <div className="">
+                    <p className="font-medium text-gray-900 mt-6 md:mt-10">
+                      {product.status}
+                    </p>
+                    <div className="mt-6">
+                      <div className="bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                          className="h-2 bg-indigo-600 rounded-full"
+                          style={{ width: `calc((${signUpStep} * 2 + 1) / 8 * 100%)` }}
+                        />
                       </div>
-                      <div className={classNames(product.step > 1 ? 'text-indigo-600' : '', 'text-center')}>
-                        Shipped
-                      </div>
-                      <div className={classNames(product.step > 2 ? 'text-indigo-600' : '', 'text-right')}>
-                        Delivered
+                      <div className="hidden sm:grid grid-cols-4 font-medium text-gray-600 mt-6">
+                      {/* <div className="text-indigo-600">Connect to Kovan Network</div> */}
+                      <div className="text-indigo-600">Connect Wallet</div>
+                        <div className={classNames(signUpStep > 0 ? 'text-indigo-600' : '', 'text-center')}>
+                          {/* Sign Message */}
+                        </div>
+                        <div className={classNames(signUpStep > 1 ? 'text-indigo-600' : '', 'text-center')}>
+                          Sign Message
+                        </div>
+                        {/* <div className={classNames(signUpStep > 1 ? 'text-indigo-600' : '', 'text-center')}>
+                          Mint user NFT
+                        </div> */}
+                        <div className={classNames(signUpStep > 2 ? 'text-indigo-600' : '', 'text-right')}>
+                          Done!
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -388,8 +419,8 @@ export default function SignUp() {
           </div>
         </section>
 
-        {/* Billing */}
-        <section aria-labelledby="summary-heading" className="mt-24">
+
+        {/* <section aria-labelledby="summary-heading" className="mt-24">
           <h2 id="summary-heading" className="sr-only">
             Billing Summary
           </h2>
@@ -451,80 +482,12 @@ export default function SignUp() {
               </div>
             </dl>
           </div>
-        </section>
+        </section> */}
       </main>
 
-      <footer aria-labelledby="footer-heading" className="bg-white border-t border-gray-200">
-        <h2 id="footer-heading" className="sr-only">
-          Footer
-        </h2>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-20 grid grid-cols-2 gap-8 sm:gap-y-0 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="grid grid-cols-1 gap-y-10 lg:col-span-2 lg:grid-cols-2 lg:gap-y-0 lg:gap-x-8">
-              <div>
-                <h3 className="text-sm font-medium text-gray-900">Account</h3>
-                <ul role="list" className="mt-6 space-y-6">
-                  {footerNavigation.account.map((item) => (
-                    <li key={item.name} className="text-sm">
-                      <a href={item.href} className="text-gray-500 hover:text-gray-600">
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-gray-900">Service</h3>
-                <ul role="list" className="mt-6 space-y-6">
-                  {footerNavigation.service.map((item) => (
-                    <li key={item.name} className="text-sm">
-                      <a href={item.href} className="text-gray-500 hover:text-gray-600">
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 gap-y-10 lg:col-span-2 lg:grid-cols-2 lg:gap-y-0 lg:gap-x-8">
-              <div>
-                <h3 className="text-sm font-medium text-gray-900">Company</h3>
-                <ul role="list" className="mt-6 space-y-6">
-                  {footerNavigation.company.map((item) => (
-                    <li key={item.name} className="text-sm">
-                      <a href={item.href} className="text-gray-500 hover:text-gray-600">
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-gray-900">Connect</h3>
-                <ul role="list" className="mt-6 space-y-6">
-                  {footerNavigation.connect.map((item) => (
-                    <li key={item.name} className="text-sm">
-                      <a href={item.href} className="text-gray-500 hover:text-gray-600">
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
 
-          <div className="border-t border-gray-100 py-10 sm:flex sm:items-center sm:justify-between">
-            <div className="flex items-center justify-center text-sm text-gray-500">
-              <p>Shipping to Canada ($CAD)</p>
-              <p className="ml-3 border-l border-gray-200 pl-3">English</p>
-            </div>
-            <p className="mt-6 text-sm text-gray-500 text-center sm:mt-0">&copy; 2021 Clothing Company, Ltd.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 
-  
+
 }

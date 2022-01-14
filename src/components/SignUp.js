@@ -220,7 +220,7 @@ export default function SignUp() {
         window.location.reload();
       });
     }else if(!ethereum){
-      var ws = new W3CWebSocket(`wss://${WEB_SOCKET}/ws/${currOtk}`);
+      var ws = new W3CWebSocket(`wss://${WEB_SOCKET}/ws/${otk}`);
 
       ws.onmessage = async function (event) {
         const json = JSON.parse(event.data);

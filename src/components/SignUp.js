@@ -93,7 +93,7 @@ export default function SignUp() {
         params: [msg, from, 'Example password'],
       });
       setSignUpStep(2)
-      sendMessage(otk, {'mobileSignedMessage':true}, userOnMobile)
+      await sendMessage(otk, {'mobileSignedMessage':true}, userOnMobile)
 
       await sendSignedMessage(otk, walletUsed, rawMessage, signedMessage)
 
@@ -120,7 +120,7 @@ export default function SignUp() {
           console.log(data.authResult.logInSuccess)
           if(data.authResult.logInSuccess){
             setSignUpStep(4)
-            sendMessage(otk, {'mobileLoginSuccess':true}, userOnMobile)
+            await sendMessage(otk, {'mobileLoginSuccess':true}, userOnMobile)
 
           function timeout(delay) {
               return new Promise( res => setTimeout(res, delay) );
@@ -154,6 +154,11 @@ export default function SignUp() {
       }).then(response => response.json())
         .then(async (data) => {
           console.log(data)
+          if(data.numMessages > 1 && message.mobileConnected === true){
+            window.close()
+            window.open('', '_self', ''); 
+            window.close();
+          }
         }).catch(error => {
           console.log(error)
         })
@@ -178,7 +183,7 @@ export default function SignUp() {
         var walletUsed = accounts[0];
         setWallet(walletUsed)
       }
-      sendMessage(otk, {'mobileConnected':true}, userOnMobile)
+      await sendMessage(otk, {'mobileConnected':true}, userOnMobile)
 
       // if (currNetwork.chainId !== 42) {
       //   setSignUpStep(0)

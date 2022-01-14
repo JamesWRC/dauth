@@ -215,7 +215,7 @@ export default function SignUp() {
       ethereum.on('chainChanged', (chainId) => {
         window.location.reload();
       });
-    }else{
+    }else if(!ethereum){
       var ws = new W3CWebSocket(`wss://${WEB_SOCKET}/ws/${otk}`);
 
       ws.onmessage = async function (event) {

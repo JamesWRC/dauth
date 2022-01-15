@@ -231,7 +231,7 @@ export default function SignUp() {
       ws.onmessage = async function (event) {
         const json = JSON.parse(event.data);
         console.log(`Data received from server web socket: ${JSON.stringify(json)}`);
-        
+        try{
         if(json.payload.msg.mobileConnected === true){
           setSignUpStep(0.05)
         }else if(json.payload.msg.mobileSignRequest === true){
@@ -247,8 +247,12 @@ export default function SignUp() {
         await timeout(1000); //for 1 sec delay
 
         navigate("/?s=success", { replace: true });
-
-        
+      }
+      }catch(err){
+        console.log('ERROR')
+        console.log(JSON.stringify(json))
+        console.log(err)
+      
         }
         // validate Auth
         // console.log(validJWT) 

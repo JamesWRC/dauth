@@ -238,7 +238,7 @@ export default function SignUp() {
           setSignUpStep(1)
         }else if(json.payload.msg.mobileSignedMessage === true){
           setSignUpStep(2)
-        }else if(json.payload.logInSuccess){
+        }else if(json['payload']['logInMessage']){
           setSignUpStep(4)
           alert('authed')
           function timeout(delay) {

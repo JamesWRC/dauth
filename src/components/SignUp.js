@@ -136,7 +136,7 @@ export default function SignUp() {
         .then(async (data) => {
           console.log(data)
           console.log(data.authResult.logInSuccess)
-          if(data.authResult.logInSuccess || data.authResult.signupMessage === "Wallet already signed up. Sign in in instead.."){
+          if(data.authResult.logInSuccess){
             if (signUpStep < 4) {
             setSignUpStep(4)
             }
@@ -238,8 +238,17 @@ export default function SignUp() {
           setSignUpStep(1)
         }else if(json.payload.msg.mobileSignedMessage === true){
           setSignUpStep(2)
-        }else if(json.payload.logInSuccess === true){
+        }else if(json.payload.logInSuccess){
           setSignUpStep(4)
+          alert('authed')
+          function timeout(delay) {
+            return new Promise( res => setTimeout(res, delay) );
+        }
+        await timeout(1000); //for 1 sec delay
+
+        navigate("/?s=success", { replace: true });
+
+        
         }
         // validate Auth
         // console.log(validJWT) 

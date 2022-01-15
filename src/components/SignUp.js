@@ -97,7 +97,7 @@ export default function SignUp() {
       }
       const account = accounts[0];
       console.log(account)
-      var from = account
+      var walletUsed = account
 
 
       const rawMessage = 'Test `personal_sign` message, with NONCE: ' + String(currOtk);
@@ -106,14 +106,13 @@ export default function SignUp() {
 
       const signedMessage = await ethereum.request({
         method: 'personal_sign',
-        params: [msg, from, 'Example password'],
+        params: [msg, walletUsed, 'Example password'],
       });
       if (signUpStep < 0.05) {
 
       setSignUpStep(2)
       }
       await sendMessage(otk, {'mobileSignedMessage':true}, userOnMobile)
-      var walletUsed = ''
       await sendSignedMessage(otk, walletUsed, rawMessage, signedMessage)
 
     }

@@ -1,5 +1,5 @@
 
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { MenuIcon, SearchIcon, ShoppingCartIcon, UserIcon, XIcon } from '@heroicons/react/outline'
 import { useNavigate } from "react-router-dom";
@@ -58,16 +58,18 @@ export default function SignUp() {
 
   const [wallet, setWallet] = useState("Couldn't connect to MetaMask...")
   const [showQRCode, setShowQRCode] = useState(false)
-  const [currOtk, setCurrOtk] = useState(null)
   
   const [searchParams, setSearchParams] = useSearchParams()
   var userOnMobile = searchParams.get("m") // if users i using mobile to authenticate
   var otk = searchParams.get("otk") // get the one time key
+
   const navigate = useNavigate();
   if(!otk){
     otk = uuidv4()
   }
-  navigate(`?otk=${otk}`, { replace: true });
+  const [currOtk, setCurrOtk] = useState(otk)
+
+  // navigate(`?otk=${otk}`, { replace: true });
 
 
 
@@ -86,9 +88,7 @@ export default function SignUp() {
 
 
     async function signMessage(ethereum, otk) {
-      if(!otk){
-        return
-      }
+
       const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
       if (signUpStep < 1) {
         await sendMessage(otk, {'mobileSignRequest':true}, userOnMobile)
@@ -100,7 +100,7 @@ export default function SignUp() {
       var from = account
 
 
-      const rawMessage = 'Test `personal_sign` message, with NONCE: ' + String(otk);
+      const rawMessage = 'Test `personal_sign` message, with NONCE: ' + String(currOtk);
 
       const msg = `0x${Buffer.from(rawMessage, 'utf8').toString('hex')}`;
 
@@ -108,7 +108,10 @@ export default function SignUp() {
         method: 'personal_sign',
         params: [msg, from, 'Example password'],
       });
+      if (signUpStep < 0.05) {
+
       setSignUpStep(2)
+      }
       await sendMessage(otk, {'mobileSignedMessage':true}, userOnMobile)
       var walletUsed = ''
       await sendSignedMessage(otk, walletUsed, rawMessage, signedMessage)
@@ -135,7 +138,9 @@ export default function SignUp() {
           console.log(data)
           console.log(data.authResult.logInSuccess)
           if(data.authResult.logInSuccess || data.authResult.signupMessage === "Wallet already signed up. Sign in in instead.."){
+            if (signUpStep < 4) {
             setSignUpStep(4)
+            }
             await sendMessage(otk, {'mobileLoginSuccess':true}, userOnMobile)
 
           function timeout(delay) {
@@ -199,14 +204,14 @@ export default function SignUp() {
         var walletUsed = accounts[0];
         setWallet(walletUsed)
       }
-      await sendMessage(otk, {'mobileConnected':true}, userOnMobile)
+      await sendMessage(currOtk, {'mobileConnected':true}, userOnMobile)
 
       // if (currNetwork.chainId !== 42) {
       //   setSignUpStep(0)
       //   return
       // }
       if (signUpStep == 0) {
-        await signMessage(ethereum, otk)
+        await signMessage(ethereum, currOtk)
       }
       ethereum.on('accountsChanged', (accounts) => {
         setWallet(accounts[0])
@@ -251,7 +256,7 @@ export default function SignUp() {
 
 
     function showMobileQRCode() {
-      const qrCodeURL = `${METAMASK_BASE_LINK}/dauth.dev/signup/?m=t&otk=${otk}`
+      const qrCodeURL = `${METAMASK_BASE_LINK}/dauth.dev/signup/?m=t&otk=${currOtk}`
       const qrCodeParent = $("#metamask-logo-parent");
       QRCode.toCanvas(document.getElementById('authQRCodeCanvas'), qrCodeURL, {
         errorCorrectionLevel: 'H',
@@ -336,7 +341,7 @@ export default function SignUp() {
 
 
     }
-  }, [showQRCode, signUpStep, currOtk])
+  }, [])
 
 
 
@@ -368,7 +373,7 @@ export default function SignUp() {
 
             <dd className="font-medium text-gray-900 truncate">
               <dt className="text-gray-500">One Time Key (OTK)&nbsp;</dt>
-              <dd className="font-medium text-gray-900 text-ellipsis overflow-hidden">{otk}</dd>
+              <dd className="font-medium text-gray-900 text-ellipsis overflow-hidden">{currOtk}</dd>
             </dd>
           </dl>
           {/* <div className="mt-4 sm:mt-0 left">

@@ -7,7 +7,6 @@ import {
 import Home from "./pages/home";
 import Otk from "./pages/otk";
 import SignUp from './components/SignUp'
-// import Invoices from "./routes/invoices";
 
 const rootElement = document.getElementById("root");
 export default function App(){

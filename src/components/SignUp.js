@@ -15,6 +15,8 @@ import { Buffer } from "buffer"
 import { CheckCircleIcon, QrcodeIcon } from '@heroicons/react/solid'
 import metamaskLogo from '../metamask.svg'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
+import MetaMaskOnboarding from '@metamask/onboarding'
+const onboarding = new MetaMaskOnboarding();
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -37,8 +39,18 @@ const products = [
     imageSrc: 'https://tailwindui.com/img/ecommerce-images/confirmation-page-04-product-01.jpg',
     imageAlt: 'Off-white t-shirt with circular dot illustration on the front of mountain ridges that fade.',
     signupStep: [{
-      heading: 'Connect to the Kovan test network',
-      description: "Open Metamask, and change the network to 'Kovan' test network.",
+      heading: 'Connect wallet',
+      description: window.ethereum ? "Open Metamask and connect your wallet." : "Scan the QRcode, and open the link in Metamask on your phone. ",
+      comp: null
+    },
+    {
+      heading: 'Sign message.',
+      description: "Sign the message the message in Metamask.",
+      comp: null
+    },
+    {
+      heading: 'Verifying...',
+      description: "Verifying signed message...",
       comp: null
     }]
   },
@@ -424,23 +436,23 @@ export default function SignUp() {
                     <div alt="metamask-logo" className={"object-center object-cover w-fit h-fit -mt-4"} id="metamask-logo" />
 
                     <canvas id="authQRCodeCanvas" className={!window.ethereum || (showQRCode) ? "block w-fit h-fit" : "hidden"}></canvas>
-
+                    <a href="https://metamask.io" target="_blank" className={!showQRCode ? "hidden":"z-10 flex justify-center pt-4 mx-2 text-slate-400"}>Don't have Metamask installed? Install here.</a>
                   </div>
                 </div>
                 <div className="mt-6 sm:col-span-7 sm:mt-0 md:row-end-1">
-                  <h3 className="text-lg font-medium text-gray-900">
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
                     <a href={product.href}>{product.name}</a>
                   </h3>
-                  <p className="text-gray-500 mt-3">{product.description}</p>
+                  <p className="text-gray-500 mt-3 ">{product.description}</p>
                 </div>
                 <div className="sm:col-span-12 md:col-span-7">
                   <dl className="grid grid-cols-1 gap-y-8 border-b py-8 border-gray-200 sm:gap-x-6 sm:py-6 md:py-10">
                     <div>
-                      <dt className="font-medium text-gray-900">{product.signupStep[0].heading}</dt>
+                      <dt className="font-bold text-gray-900">{product.signupStep[signUpStep < 0 ? 0 : signUpStep].heading}</dt>
                       <dd className="mt-3 text-gray-500">
-                        <span className="block">{product.signupStep[0].description}</span>
-                        <span className="block">{product.signupStep[0].url}</span>
-                        {product.signupStep[0].comp !== null ? product.signupStep[0].comp : null}
+                        <span className="block">{product.signupStep[signUpStep < 0 ? 0 : signUpStep].description}</span>
+                        <span className="block">{product.signupStep[signUpStep < 0 ? 0 : signUpStep].url}</span>
+                        {product.signupStep[signUpStep < 0 ? 0 : signUpStep].comp !== null ? product.signupStep[signUpStep < 0 ? 0 : signUpStep].comp : null}
 
                       </dd>
                     </div>

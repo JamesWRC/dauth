@@ -232,13 +232,13 @@ export default function SignUp() {
         const json = JSON.parse(event.data);
         console.log(`Data received from server web socket: ${JSON.stringify(json)}`);
         try{
-        if(json.payload.msg.mobileConnected === true){
+        if(json.payload.hasOwnProperty('msg') && json.payload.msg.mobileConnected === true){
           setSignUpStep(0.05)
-        }else if(json.payload.msg.mobileSignRequest === true){
+        }else if(json.payload.hasOwnProperty('msg') && json.payload.msg.mobileSignRequest === true){
           setSignUpStep(1)
-        }else if(json.payload.msg.mobileSignedMessage === true){
+        }else if(json.payload.hasOwnProperty('msg') && json.payload.msg.mobileSignedMessage === true){
           setSignUpStep(2)
-        }else if(json['payload']['logInMessage']){
+        }else if(json.payload.hasOwnProperty('logInMessage') && json.payload.logInSuccess){
           setSignUpStep(4)
           alert('authed')
           function timeout(delay) {

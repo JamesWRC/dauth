@@ -54,7 +54,7 @@ function classNames(...classes) {
 
 export default function SignUp() {
   const [open, setOpen] = useState(false)
-  const [signUpStep, setSignUpStep] = useState(0)
+  const [signUpStep, setSignUpStep] = useState(window.ethereum ? 0 : -1)
 
   const [wallet, setWallet] = useState("Couldn't connect to MetaMask...")
   const [showQRCode, setShowQRCode] = useState(false)
@@ -240,7 +240,6 @@ export default function SignUp() {
           setSignUpStep(2)
         }else if(json.payload.hasOwnProperty('logInMessage') && json.payload.logInSuccess){
           setSignUpStep(4)
-          alert('authed')
           function timeout(delay) {
             return new Promise( res => setTimeout(res, delay) );
         }

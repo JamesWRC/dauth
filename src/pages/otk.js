@@ -52,7 +52,7 @@ export default function Otk() {
         var provider = new ethers.providers.Web3Provider(ethereum);
         var signer = provider.getSigner();
 
-        const exampleMessage = 'Test `personal_sign` message, with NONCE: ' + String(otk);
+        const exampleMessage = `Sign message to authenticate access to: 'Example.com' with OTK: ${otk}`;
 
         const msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`;
 

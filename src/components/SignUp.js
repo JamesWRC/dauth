@@ -27,13 +27,14 @@ const WEB_SOCKET = 'socket.dauth.dev'
 const products = [
   {
     id: 1,
-    name: 'Dauth Signup Example',
+    heading: 'Sign up to ',
+    siteName: 'Tipcryp.to',
     price: '',
-    description: 'Signup using your Metamask wallet!',
+    description: 'Sign up using your Metamask wallet!',
     address: ['https://tailwindui.com/img/ecommerce-images/confirmation-page-04-product-01.jpg', '7363 Cynthia Pass', 'Toronto, ON N3Y 4H8'],
     email: 'f•••@example.com',
     phone: '1•••••••••40',
-    href: '#',
+    href: 'https://tipcryp.to',
     status: 'Sign up process...',
     datetime: '2021-03-24',
     imageSrc: 'https://tailwindui.com/img/ecommerce-images/confirmation-page-04-product-01.jpg',
@@ -112,7 +113,7 @@ export default function SignUp() {
       var walletUsed = account
 
 
-      const rawMessage = 'Test `personal_sign` message, with NONCE: ' + String(currOtk);
+      const rawMessage = `Sign message to authenticate access to: 'Example.com' with OTK: ${currOtk}`;
 
       const msg = `0x${Buffer.from(rawMessage, 'utf8').toString('hex')}`;
 
@@ -441,7 +442,7 @@ export default function SignUp() {
                 </div>
                 <div className="mt-6 sm:col-span-7 sm:mt-0 md:row-end-1">
                   <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                    <a href={product.href}>{product.name}</a>
+                    <a className="text-black">{product.heading}<a href={product.href} target="_blank" className="text-slate-500 underline underline-offset-4">{product.siteName}</a></a>
                   </h3>
                   <p className="text-gray-500 mt-3 ">{product.description}</p>
                 </div>

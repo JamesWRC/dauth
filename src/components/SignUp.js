@@ -54,6 +54,11 @@ const products = [
       heading: 'Verifying...',
       description: "Verifying signed message...",
       comp: null
+    },
+    {
+      heading: 'Done!',
+      description: "Successfully signed up. Redirecting...",
+      comp: null
     }]
   },
   // More products...
@@ -229,7 +234,7 @@ export default function SignUp() {
       ethereum.on('accountsChanged', (accounts) => {
         setWallet(accounts[0])
         if (signUpStep < 0.05) {
-          setSignUpStep(0.05)
+          setSignUpStep(0)
         }
         window.location.reload();
       });
@@ -253,12 +258,12 @@ export default function SignUp() {
         }else if(json.payload.hasOwnProperty('msg') && json.payload.msg.mobileSignedMessage === true){
           setSignUpStep(2)
         }else if(json.payload.hasOwnProperty('logInMessage') && json.payload.logInSuccess){
-          setSignUpStep(4)
+          setSignUpStep(3)
           function timeout(delay) {
             return new Promise( res => setTimeout(res, delay) );
         }
         await timeout(1000); //for 1 sec delay
-
+        
         navigate("/?s=success", { replace: true });
       }
       }catch(err){
@@ -366,6 +371,7 @@ export default function SignUp() {
 
 
     }
+
   }, [showQRCode])
 
 
@@ -450,11 +456,11 @@ export default function SignUp() {
                 <div className="sm:col-span-12 md:col-span-7">
                   <dl className="grid grid-cols-1 gap-y-8 border-b py-8 border-gray-200 sm:gap-x-6 sm:py-6 md:py-10">
                     <div>
-                      <dt className="font-bold text-gray-900">{product.signupStep[signUpStep < 0 ? 0 : signUpStep].heading}</dt>
+                      <dt className="font-bold text-gray-900">{product.signupStep[signUpStep < 0 ? 0 : signUpStep >= product.signupStep.length ? product.signupStep.length -1 : signUpStep].heading}</dt>
                       <dd className="mt-3 text-gray-500">
-                        <span className="block">{product.signupStep[signUpStep < 0 ? 0 : signUpStep].description}</span>
-                        <span className="block">{product.signupStep[signUpStep < 0 ? 0 : signUpStep].url}</span>
-                        {product.signupStep[signUpStep < 0 ? 0 : signUpStep].comp !== null ? product.signupStep[signUpStep < 0 ? 0 : signUpStep].comp : null}
+                        <span className="block">{product.signupStep[signUpStep < 0 ? 0 : signUpStep >= product.signupStep.length ? product.signupStep.length -1 : signUpStep].description}</span>
+                        <span className="block">{product.signupStep[signUpStep < 0 ? 0 : signUpStep >= product.signupStep.length ? product.signupStep.length -1 : signUpStep].url}</span>
+                        {product.signupStep[signUpStep < 0 ? 0 : signUpStep >= product.signupStep.length ? product.signupStep.length -1 : signUpStep].comp !== null ? product.signupStep[signUpStep < 0 ? 0 : signUpStep >= product.signupStep.length ? product.signupStep.length -1 : signUpStep].comp : null}
 
                       </dd>
                     </div>

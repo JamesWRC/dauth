@@ -28,7 +28,8 @@ const products = [
   {
     id: 1,
     heading: 'Sign up to ',
-    siteName: 'Tipcryp.to',
+    // siteName: 'Tipcryp.to',
+    siteName: 'Example.com',
     price: '',
     description: 'Sign up using your Metamask wallet!',
     address: ['https://tailwindui.com/img/ecommerce-images/confirmation-page-04-product-01.jpg', '7363 Cynthia Pass', 'Toronto, ON N3Y 4H8'],
@@ -246,7 +247,7 @@ export default function SignUp() {
         console.log(`Data received from server web socket: ${JSON.stringify(json)}`);
         try{
         if(json.payload.hasOwnProperty('msg') && json.payload.msg.mobileConnected === true){
-          setSignUpStep(0.05)
+          setSignUpStep(0)
         }else if(json.payload.hasOwnProperty('msg') && json.payload.msg.mobileSignRequest === true){
           setSignUpStep(1)
         }else if(json.payload.hasOwnProperty('msg') && json.payload.msg.mobileSignedMessage === true){

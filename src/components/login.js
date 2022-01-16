@@ -25,7 +25,7 @@ export default function Login() {
   const [searchParams, setSearchParams] = useSearchParams()
   var userOnMobile = searchParams.get("m") // if users i using mobile to authenticate
   var otk = searchParams.get("otk") // get the one time key
-  if (!otk && userOnMobile) {
+  if (!otk) {
     otk = uuidv4()
   }
   useEffect(async () => {

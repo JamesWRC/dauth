@@ -208,7 +208,7 @@ function Home() {
                 </div>
 
                 <div class="flex justify-center space-x-4">
-                  <div class="flex justify-center space-x-8 lg:py-12">
+                  <div class="flex justify-center space-x-8 py-12">
                     <button onClick={() => setShowLogin(true)} type="button" class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700  hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                       &nbsp;&nbsp;Sign In&nbsp;&nbsp;
                     </button>

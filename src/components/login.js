@@ -46,7 +46,7 @@ export default function Login() {
           authBadge.addClass('text-green-500')
           authBadge.text('Successfully logged in.')
           setTimeout(function () {
-            window.location.reload()
+            leaveLoginModal()
           }, 1000);
         }else{
           authBadge.addClass('text-red-500')

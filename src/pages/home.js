@@ -223,7 +223,15 @@ function Home() {
                 </div> */}
               </div>
             </section>
-
+            <footer class="container mx-auto my-8 px-5">
+            <div class="md:flex md:justify-between md:items-center text-xs text-center text-gray-600 space-y-3 md:space-y-0">
+                <div class="space-y-2 md:space-y-0 md:flex md:justify-between md:items-center md:space-x-5">
+                    <p>Template and logo Glyph by <a class="text-blue-700 underline" href="https://preview.launchoice.com/pippe/" rel="nofollow" target="_blank">pippe</a> . Dauth made by JamesWRC. All rights reserved.</p>
+                    <p>Glyphs by <a class="text-blue-700 underline" href="https://fontawesome.com/" rel="nofollow" target="_blank">fontawesome.com</a> and <a class="text-blue-700 underline" href="https://heroicons.com/" rel="nofollow" target="_blank">heroicons.com</a></p>
+                </div>
+               
+            </div>
+        </footer>
 
           </main>
         </body>

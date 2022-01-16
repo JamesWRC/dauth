@@ -195,7 +195,7 @@ function Home() {
             {/* <!-- End Features --> */}
 
             {isAuthed ? <AuthedContend /> : null}
-            <section class="container mx-auto md:px-5">
+            <section class="container mx-auto md:px-5 py-24">
               {/* <!-- Start Download App --> */}
               <div class={isAuthed ? "hidden" : "pt-12 lg:pt-24 px-5 md:px-0 text-center bg-blue-50 space-y-8 md:space-y-12"}>
                 <div class="space-y-4">

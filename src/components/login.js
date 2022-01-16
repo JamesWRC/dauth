@@ -174,16 +174,23 @@ export default function Login() {
                   </Dialog.Title>
                   <dl className="flex relative">
 
-<dd className="font-medium text-gray-900 truncate">
-  <dt className="text-m text-gray-500">One Time Key (OTK)&nbsp;</dt>
-  <dd className="text-m font-medium text-gray-400 text-ellipsis overflow-hidden">{otk}</dd>
-</dd>
-</dl>
+                  <div class="grid grid-cols-12  ...">
+                      <div></div>
+                      <dd className="font-medium text-gray-900 truncate col-span-10">
+                    <dt className="text-m text-gray-500">One Time Key (OTK)&nbsp;</dt>
+                    <dd className="text-m font-medium text-gray-400 text-ellipsis overflow-hidden">{otk}</dd>
+                  </dd>
+                    </div>
+
+                  </dl>
                   <div className="mt-2">
                     <div class="grid grid-cols-3 gap-4 ...">
                       <div></div>
                       <canvas className="place-self-center" id="authQRCodeCanvas"></canvas>
                     </div>
+                    <p className="text-sm text-slate-500">
+                      <a className={window.ethereum ? "hidden " : "underline underline-offset-4"} href={`${METAMASK_BASE_LINK}/dauth.dev/auth/?m=t&otk=${otk}`}>( On Mobile? Open in Metamask app )</a>
+                    </p>
                     <p className="text-sm text-gray-500">
                       {window.ethereum ? 'Either login via opening the QR code through Metamask on your phone or via the Metamask window on your browser.' : 'Scan the QR code, open it in the Metamask app on your phone and sign the message.'}
                     </p>

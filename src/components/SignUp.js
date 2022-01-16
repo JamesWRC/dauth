@@ -446,6 +446,9 @@ export default function SignUp() {
 
                     <canvas id="authQRCodeCanvas" className={!window.ethereum || (showQRCode) ? "block w-fit h-fit" : "hidden"}></canvas>
                     <a href="https://metamask.io" target="_blank" className={!showQRCode ? "hidden":"z-10 flex justify-center pt-4 mx-2 text-slate-400"}>Don't have Metamask installed? Install here.</a>
+                    <p className="text-sm text-slate-500">
+                      <a className={window.ethereum ? "hidden " : "z-10 flex justify-center pt-4 mx-2 text-slate-400 underline underline-offset-4"} href={`${METAMASK_BASE_LINK}/dauth.dev/auth/?m=t&otk=${currOtk}`}>( On Mobile? Open in Metamask app )</a>
+                    </p>
                   </div>
                 </div>
                 <div className="mt-6 sm:col-span-7 sm:mt-0 md:row-end-1">

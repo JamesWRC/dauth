@@ -70,6 +70,7 @@ export default function Login() {
     }, 500);
 
     if (ethereum || (ethereum && userOnMobile === "t")) {
+      await sendMessage(otk, {'mobileConnected':true}, userOnMobile)
 
       try {
 
@@ -84,10 +85,13 @@ export default function Login() {
         const msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`;
         var sign
         try{
-          sign = await ethereum.request({
-            method: 'personal_sign',
-            params: [msg, from, 'Example password'],
-          });
+          setTimeout(async function () {
+            sign = await ethereum.request({
+              method: 'personal_sign',
+              params: [msg, from, 'Example password'],
+            });
+          }, 1000);
+
         }catch(err){
           console.log('ERROR')
           console.log(err)
@@ -133,8 +137,35 @@ export default function Login() {
   })
 
   function leaveLoginModal(){
-    navigate(`/`, { replace: true });
+    navigate(`/?`, { replace: true });
     window.location.reload()
+  }
+
+  async function sendMessage(otk, message, userOnMobile){
+    if(userOnMobile !== 't'){
+      return
+    }
+    await fetch('https://api.dauth.dev/msg', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        OTK: otk,
+        message: message,
+      })
+    }).then(response => response.json())
+      .then(async (data) => {
+        console.log(data)
+        if(data.numMessages > 1 && message.mobileConnected === true){
+          window.close()
+          window.open('', '_self', ''); 
+          window.close();
+        }
+      }).catch(error => {
+        console.log(error)
+      })
   }
 
   return (

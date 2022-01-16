@@ -89,17 +89,15 @@ export default function Login() {
         var exampleMessage ;
 
         var msg ;
-        var sign
+        var sign;
         try{
-          setTimeout(async function () {
-            exampleMessage = `Sign message to authenticate access to: 'Example.com' with OTK: ${currOtk}`;
+          exampleMessage = `Sign message to authenticate access to: 'Example.com' with OTK: ${currOtk}`;
 
-            msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`;
-            sign = await ethereum.request({
-              method: 'personal_sign',
-              params: [msg, from, 'Example password'],
-            });
-          }, 1000);
+          msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`;
+          sign = await ethereum.request({
+            method: 'personal_sign',
+            params: [msg, from, 'Example password'],
+          })
 
         }catch(err){
           console.log('ERROR')

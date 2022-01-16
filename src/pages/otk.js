@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 import { Buffer } from "buffer"
 import QRCode from 'qrcode'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-
+import { useCookies } from "react-cookie";
 const { v4: uuidv4 } = require('uuid');
 const METAMASK_BASE_LINK = 'https://metamask.app.link/dapp';
 const WEB_SOCKET = 'socket.dauth.dev'
@@ -13,6 +13,7 @@ const WEB_SOCKET = 'socket.dauth.dev'
 
 
 export default function Otk() {
+  const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
 
   const [searchParams, setSearchParams] = useSearchParams()
   var userOnMobile = searchParams.get("m") // if users i using mobile to authenticate
@@ -32,6 +33,7 @@ export default function Otk() {
       if(userOnMobile !== "t"){
         const validJWT = await verifyAuth(json.payload.JWT)
         alert(validJWT)  
+        setCookie('dauthJWT', validJWT, { path: '/' });
       }
 
     };

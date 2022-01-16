@@ -60,7 +60,7 @@ export default function Login() {
 
 
     const ethereum = window.ethereum;
-    const qrCodeURL = `${METAMASK_BASE_LINK}/dauth.dev/auth/?m=t&otk=${otk}`
+    const qrCodeURL = `${METAMASK_BASE_LINK}/dauth.dev/?m=t&signin=mobile&otk=${otk}`
     setTimeout(function () {
       QRCode.toCanvas(document.getElementById('authQRCodeCanvas'), qrCodeURL, { errorCorrectionLevel: 'H' }, function (err, url) {
       })
@@ -194,7 +194,7 @@ export default function Login() {
                       <canvas className="place-self-center" id="authQRCodeCanvas"></canvas>
                     </div>
                     <p className="text-sm text-slate-500">
-                      <a className={window.ethereum ? "hidden " : "underline underline-offset-4"} href={`${METAMASK_BASE_LINK}/dauth.dev/auth/?m=t&otk=${otk}?signin=mobile`}>( On Mobile? Open in Metamask app )</a>
+                      <a className={window.ethereum ? "hidden " : "underline underline-offset-4"} href={`${METAMASK_BASE_LINK}/dauth.dev/?m=t&signin=mobile&otk=${otk}`}>( On Mobile? Open in Metamask app )</a>
                     </p>
                     <p className="text-sm text-gray-500">
                       {window.ethereum ? 'Either login via opening the QR code through Metamask on your phone or via the Metamask window on your browser.' : 'Scan the QR code, open it in the Metamask app on your phone and sign the message.'}

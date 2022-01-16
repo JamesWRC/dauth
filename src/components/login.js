@@ -94,10 +94,13 @@ export default function Login() {
           exampleMessage = `Sign message to authenticate access to: 'Example.com' with OTK: ${currOtk}`;
 
           msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`;
-          sign = await ethereum.request({
-            method: 'personal_sign',
-            params: [msg, from, 'Example password'],
-          })
+          if(!cookies.dauthJWT){
+            sign = await ethereum.request({
+              method: 'personal_sign',
+              params: [msg, from, 'Example password'],
+            })
+          }
+
 
         }catch(err){
           console.log('ERROR')

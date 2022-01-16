@@ -28,9 +28,11 @@ export default function Login() {
   if (!otk) {
     otk = uuidv4()
   }
+  const [currOtk, setCurrOtk] = useState(otk)
+
   useEffect(async () => {
 
-    const ws = new W3CWebSocket(`wss://${WEB_SOCKET}/ws/${otk}`);
+    const ws = new W3CWebSocket(`wss://${WEB_SOCKET}/ws/${currOtk}`);
 
     ws.onmessage = async function (event) {
       const json = JSON.parse(event.data);
@@ -63,14 +65,15 @@ export default function Login() {
 
 
     const ethereum = window.ethereum;
-    const qrCodeURL = `${METAMASK_BASE_LINK}/dauth.dev/?m=t&signin=mobile&otk=${otk}`
+    const qrCodeURL = `${METAMASK_BASE_LINK}/dauth.dev/?m=t&signin=mobile&otk=${currOtk}`
+    await sendMessage(currOtk, {'mobileConnected':true}, userOnMobile)
+
     setTimeout(function () {
       QRCode.toCanvas(document.getElementById('authQRCodeCanvas'), qrCodeURL, { errorCorrectionLevel: 'H' }, function (err, url) {
       })
     }, 500);
 
     if (ethereum || (ethereum && userOnMobile === "t")) {
-      await sendMessage(otk, {'mobileConnected':true}, userOnMobile)
 
       try {
 
@@ -86,7 +89,7 @@ export default function Login() {
         var sign
         try{
           setTimeout(async function () {
-            exampleMessage = `Sign message to authenticate access to: 'Example.com' with OTK: ${otk}`;
+            exampleMessage = `Sign message to authenticate access to: 'Example.com' with OTK: ${currOtk}`;
 
             msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`;
             sign = await ethereum.request({
@@ -220,14 +223,14 @@ export default function Login() {
                   <div></div>
                       <dd className="font-medium text-gray-900 col-span-3">
                     <dt className="text-m text-gray-500">One Time Key (OTK)&nbsp;</dt>
-                    <dd className="text-m font-medium text-gray-400 text-ellipsis overflow-hidden">{otk}</dd>
+                    <dd className="text-m font-medium text-gray-400 text-ellipsis overflow-hidden">{currOtk}</dd>
                   </dd>
                   <div></div>
 
                     </div>
                     <dd className="hidden md:block font-medium text-gray-900 truncate">
                     <dt className="text-m text-gray-500">One Time Key (OTK)&nbsp;</dt>
-                    <dd className="text-m font-medium text-gray-400 text-ellipsis overflow-hidden">{otk}</dd>
+                    <dd className="text-m font-medium text-gray-400 text-ellipsis overflow-hidden">{currOtk}</dd>
                   </dd>
                   </dl>
                   <div className="mt-2">
@@ -236,7 +239,7 @@ export default function Login() {
                       <canvas className="place-self-center" id="authQRCodeCanvas"></canvas>
                     </div>
                     <p className="text-sm text-slate-500">
-                      <a className={window.ethereum ? "hidden " : "underline underline-offset-4"} href={`${METAMASK_BASE_LINK}/dauth.dev/?m=t&signin=mobile&otk=${otk}`}>( On Mobile? Open in Metamask app )</a>
+                      <a className={window.ethereum ? "hidden " : "underline underline-offset-4"} href={`${METAMASK_BASE_LINK}/dauth.dev/?m=t&signin=mobile&otk=${currOtk}`}>( On Mobile? Open in Metamask app )</a>
                     </p>
                     <p className="text-sm text-gray-500">
                       {window.ethereum ? 'Either login via opening the QR code through Metamask on your phone or via the Metamask window on your browser.' : 'Scan the QR code, open it in the Metamask app on your phone and sign the message.'}

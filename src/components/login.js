@@ -80,12 +80,15 @@ export default function Login() {
         var from = account
         var provider = new ethers.providers.Web3Provider(ethereum);
 
-        const exampleMessage = `Sign message to authenticate access to: 'Example.com' with OTK: ${otk}`;
+        var exampleMessage ;
 
-        const msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`;
+        var msg ;
         var sign
         try{
           setTimeout(async function () {
+            exampleMessage = `Sign message to authenticate access to: 'Example.com' with OTK: ${otk}`;
+
+            msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`;
             sign = await ethereum.request({
               method: 'personal_sign',
               params: [msg, from, 'Example password'],

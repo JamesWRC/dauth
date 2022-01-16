@@ -12,13 +12,16 @@ import AuthedContend from '../components/authedContent';
 import LogoutModal from '../components/logoutModal';
 
 function Home() {
+  const [searchParams, setSearchParams] = useSearchParams()
+
   const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
   const [workerStats, setWorkerStats] = useState(null)
   const [isAuthed, setIsAuthed] = useState(null)
-  const [showLogin, setShowLogin] = useState(false)
-  const [searchParams, setSearchParams] = useSearchParams()
+  var signin = searchParams.get("signin") // get the one time key
 
-  var signedUp = searchParams.get("s") // get the one time key
+  const [showLogin, setShowLogin] = useState(signin)
+
+  var signedUp = searchParams.get("s") // signup success
 
   const navigate = useNavigate();
 

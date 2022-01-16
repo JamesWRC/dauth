@@ -174,14 +174,19 @@ export default function Login() {
                   </Dialog.Title>
                   <dl className="flex relative">
 
-                  <div class="grid grid-cols-12  ...">
-                      <div></div>
-                      <dd className="font-medium text-gray-900 truncate col-span-10">
+                  <div class="block md:hidden grid grid-cols-5 ">
+                  <div></div>
+                      <dd className="font-medium text-gray-900 col-span-3">
                     <dt className="text-m text-gray-500">One Time Key (OTK)&nbsp;</dt>
                     <dd className="text-m font-medium text-gray-400 text-ellipsis overflow-hidden">{otk}</dd>
                   </dd>
-                    </div>
+                  <div></div>
 
+                    </div>
+                    <dd className="hidden md:block font-medium text-gray-900 truncate">
+                    <dt className="text-m text-gray-500">One Time Key (OTK)&nbsp;</dt>
+                    <dd className="text-m font-medium text-gray-400 text-ellipsis overflow-hidden">{otk}</dd>
+                  </dd>
                   </dl>
                   <div className="mt-2">
                     <div class="grid grid-cols-3 gap-4 ...">
@@ -189,7 +194,7 @@ export default function Login() {
                       <canvas className="place-self-center" id="authQRCodeCanvas"></canvas>
                     </div>
                     <p className="text-sm text-slate-500">
-                      <a className={window.ethereum ? "hidden " : "underline underline-offset-4"} href={`${METAMASK_BASE_LINK}/dauth.dev/auth/?m=t&otk=${otk}`}>( On Mobile? Open in Metamask app )</a>
+                      <a className={window.ethereum ? "hidden " : "underline underline-offset-4"} href={`${METAMASK_BASE_LINK}/dauth.dev/auth/?m=t&otk=${otk}?signin=mobile`}>( On Mobile? Open in Metamask app )</a>
                     </p>
                     <p className="text-sm text-gray-500">
                       {window.ethereum ? 'Either login via opening the QR code through Metamask on your phone or via the Metamask window on your browser.' : 'Scan the QR code, open it in the Metamask app on your phone and sign the message.'}

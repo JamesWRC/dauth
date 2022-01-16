@@ -52,7 +52,7 @@ export default function Login() {
           authBadge.addClass('text-red-500')
           authBadge.text('Failed to login, try again...')
           setTimeout(function () {
-            window.location.reload()
+            leaveLoginModal()
           }, 5000);
         }
        
@@ -96,7 +96,7 @@ export default function Login() {
             const authBadge = $("#signInResponseMessage");
             authBadge.addClass('text-red-500')
             authBadge.text("Failed to login, didn't sign message...")
-            window.location.reload()
+            leaveLoginModal()
           }, 3000);
         }
 

@@ -10,12 +10,15 @@ import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { CheckIcon, IdentificationIcon } from '@heroicons/react/outline';
 import $ from 'jquery';
+import { useNavigate } from "react-router-dom";
 
 const { v4: uuidv4 } = require('uuid');
 const METAMASK_BASE_LINK = 'https://metamask.app.link/dapp';
 const WEB_SOCKET = 'socket.dauth.dev'
 
 export default function Login() {
+  const navigate = useNavigate();
+
   const [open, setOpen] = useState(true)
   const [cookies, setCookie, removeCookie] = useCookies(['dauth-token']);
 
@@ -129,10 +132,15 @@ export default function Login() {
 
   })
 
+  function leaveLoginModal(){
+    navigate(`/`, { replace: true });
+    window.location.reload()
+  }
+
   return (
     <Transition.Root show={open} as={Fragment}>
 
-      <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={() => window.location.reload()}>
+      <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={() => leaveLoginModal()}>
         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
             as={Fragment}
@@ -209,7 +217,7 @@ export default function Login() {
                 <button
                   type="button"
                   className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
-                  onClick={() => window.location.reload()}
+                  onClick={() => leaveLoginModal()}
                 >
                   Go back to home.
                 </button>

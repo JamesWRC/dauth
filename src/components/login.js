@@ -51,11 +51,14 @@ export default function Login() {
             leaveLoginModal()
           }, 1000);
         }else{
-          authBadge.addClass('text-red-500')
-          authBadge.text('Failed to login, try again...')
-          setTimeout(function () {
-            leaveLoginModal()
-          }, 5000);
+          if(!userOnMobile){
+            authBadge.addClass('text-red-500')
+            authBadge.text('Failed to login, try again...')
+            setTimeout(function () {
+              leaveLoginModal()
+            }, 5000);
+          }
+         
         }
        
       // }

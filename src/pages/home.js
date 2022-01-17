@@ -14,7 +14,7 @@ import LogoutModal from '../components/logoutModal';
 function Home() {
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
+  const [cookies, setCookie, removeCookie] = useCookies(['dauth-token']);
   const [workerStats, setWorkerStats] = useState(null)
   const [isAuthed, setIsAuthed] = useState(null)
   var signin = searchParams.get("signin") // get the one time key

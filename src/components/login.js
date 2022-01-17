@@ -31,7 +31,9 @@ export default function Login() {
   const [currOtk, setCurrOtk] = useState(otk)
 
   useEffect(async () => {
-
+    if(cookies.dauthJWT){
+      return
+    }
     const ws = new W3CWebSocket(`wss://${WEB_SOCKET}/ws/${currOtk}`);
 
     ws.onmessage = async function (event) {
@@ -94,12 +96,11 @@ export default function Login() {
           exampleMessage = `Sign message to authenticate access to: 'Example.com' with OTK: ${currOtk}`;
 
           msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`;
-          if(!cookies.dauthJWT){
-            sign = await ethereum.request({
-              method: 'personal_sign',
-              params: [msg, from, 'Example password'],
-            })
-          }
+          sign = await ethereum.request({
+            method: 'personal_sign',
+            params: [msg, from, 'Example password'],
+          })
+          
 
 
         }catch(err){

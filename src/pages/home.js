@@ -81,9 +81,9 @@ function Home() {
 
           <main>
 
-            <div class="xl:h-screen bg-blue-50 overflow-hidden relative">
+            <div class="h-screen bg-blue-50 overflow-hidden relative">
               {/* <!-- Start Hero --> */}
-              <div class="sm:h-96 xl:h-full container mx-auto px-5">
+              <div class="h-96 h-full container mx-auto px-5">
                 <div class="absolute top-8">
                   <a href="#"><img src="assets/img/logo.svg" alt="" /></a>
                 </div>
@@ -91,7 +91,7 @@ function Home() {
                   <div class="sm:col-span-1 space-y-5 md:space-y-8">
                     <h1 class="text-4xl sm:text-5xl xl:text-7xl font-semibold">Dauth</h1>
                     <h2 className="inline-block text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight dark:text-slate-700"> Decentralized authentication</h2>
-                    <p class="text-s md:text-2xl">Crypto wallet + simple cryptography = passwordless authentication that <a className="font-extrabold underline underline-offset-4"> you </a> control.</p>
+                    <p class="text-s md:text-2xl">Crypto wallet + simple cryptography = passwordless authentication that <a className="font-extrabold underline underline-offset-4"> you</a> control.</p>
                     <div class="flex justify-center space-x-8 lg:py-12">
                       <button onClick={() => setShowLogin(true)} type="button" class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700  hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         &nbsp;&nbsp;Sign In&nbsp;&nbsp;

@@ -2,55 +2,15 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.floating { 
+  animation-name: floating;
+  animation-duration: 7s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.card{
-  transition: transform 1s;
-  transform-style: preserve-3d;
-}
-
-.card-face{
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.card-back{
-  transform: rotateY( 180deg );
-}
-
-.card.is-flipped {
-  transform: rotateY(180deg);
+@keyframes floating {
+  0% { transform: translate(0,  0px); }
+  50%  { transform: translate(0, -15px); }
+  100%   { transform: translate(0, -0px); }   
 }

@@ -20,6 +20,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(true)
+  const [loginState, setLoginState] = useState(0)
   const [cookies, setCookie, removeCookie] = useCookies(['dauth-token']);
 
   const [searchParams, setSearchParams] = useSearchParams()
@@ -31,7 +32,7 @@ export default function Login() {
   const [currOtk, setCurrOtk] = useState(otk)
 
   useEffect(async () => {
-    if(cookies.dauthJWT){
+    if(loginState != 0 ){
       return
     }
     const ws = new W3CWebSocket(`wss://${WEB_SOCKET}/ws/${currOtk}`);
@@ -49,17 +50,21 @@ export default function Login() {
           setCookie('dauthJWT', json.payload.JWT, { path: '/' });
           authBadge.addClass('text-green-500')
           authBadge.text('Successfully logged in.')
+        
           setTimeout(function () {
-            leaveLoginModal()
+            leaveLoginModal();
           }, 1000);
+          
+          setLoginState(1)
+
         }else{
-          if(!userOnMobile){
             authBadge.addClass('text-red-500')
             authBadge.text('Failed to login, try again...')
             setTimeout(function () {
               leaveLoginModal()
             }, 5000);
-          }
+            setLoginState(-1)
+
          
         }
        
@@ -113,6 +118,8 @@ export default function Login() {
             authBadge.text("Failed to login, didn't sign message...")
             leaveLoginModal()
           }, 3000);
+          setLoginState(-1)
+
         }
 
 
@@ -132,7 +139,6 @@ export default function Login() {
         }).then(response => response.json())
           .then(async (data) => {
             console.log(data)
-            const authBadge = $("#signInResponseMessage");
 
           }).catch(error => {
             console.log("error")
@@ -245,6 +251,9 @@ export default function Login() {
                     </div>
                     <p className="text-sm text-slate-500">
                       <a className={window.ethereum ? "hidden " : "underline underline-offset-4"} href={`${METAMASK_BASE_LINK}/dauth.dev/?m=t&signin=mobile&otk=${currOtk}`}>( On Mobile? Open in Metamask app )</a>
+                    </p>
+                    <p className="text-sm text-green-500">
+                      {cookies.dauthJWT ? "You're already logged in. Feel free to login again." : null}
                     </p>
                     <p className="text-sm text-gray-500">
                       {window.ethereum ? 'Either login via opening the QR code through Metamask on your phone or via the Metamask window on your browser.' : 'Scan the QR code, open it in the Metamask app on your phone and sign the message.'}

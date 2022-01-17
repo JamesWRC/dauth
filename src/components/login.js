@@ -57,15 +57,16 @@ export default function Login() {
           
           setLoginState(1)
 
+        }else if(json.payload.hasOwnProperty("msg")){
+           
         }else{
-            authBadge.addClass('text-red-500')
-            authBadge.text('Failed to login, try again...')
-            setTimeout(function () {
-              leaveLoginModal()
-            }, 5000);
-            setLoginState(-1)
-
-         
+          authBadge.addClass('text-red-500')
+          authBadge.text('Failed to login, try again...')
+          alert(JSON.stringify(json))
+          setTimeout(function () {
+            leaveLoginModal()
+          }, 5000);
+          setLoginState(-1)
         }
        
       // }

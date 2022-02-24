@@ -22,7 +22,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const ModelViewer = require('@metamask/logo');
 const METAMASK_BASE_LINK = 'https://metamask.app.link/dapp';
-const WEB_SOCKET = 'socket.dauth.dev'
+const WEB_SOCKET = 'soc1.dauth.dev'
 
 const products = [
   {
@@ -264,13 +264,14 @@ export default function SignUp() {
             return new Promise( res => setTimeout(res, delay) );
         }
         await timeout(1000); //for 1 sec delay
-        
+        ws.close()
         navigate("/?s=success", { replace: true });
       }
       }catch(err){
         console.log('ERROR')
         console.log(JSON.stringify(json))
         console.log(err)
+        ws.close()
       
         }
         // validate Auth

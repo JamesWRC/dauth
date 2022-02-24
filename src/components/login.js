@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 const { v4: uuidv4 } = require('uuid');
 const METAMASK_BASE_LINK = 'https://metamask.app.link/dapp';
-const WEB_SOCKET = 'socket.dauth.dev'
+const WEB_SOCKET = 'soc1.dauth.dev'
 
 export default function Login() {
   const navigate = useNavigate();
@@ -52,6 +52,7 @@ export default function Login() {
           authBadge.text('Successfully logged in.')
         
           setTimeout(function () {
+            ws.close()
             leaveLoginModal();
           }, 1000);
           
@@ -62,10 +63,12 @@ export default function Login() {
         }else{
           authBadge.addClass('text-red-500')
           authBadge.text('Failed to login, try again...')
-          alert(JSON.stringify(json))
+          ws.close()
           setTimeout(function () {
+            
             leaveLoginModal()
           }, 5000);
+          
           setLoginState(-1)
         }
        
@@ -112,11 +115,12 @@ export default function Login() {
         }catch(err){
           console.log('ERROR')
           console.log(err)
-
+          ws.close()
           setTimeout(function () {
             const authBadge = $("#signInResponseMessage");
             authBadge.addClass('text-red-500')
             authBadge.text("Failed to login, didn't sign message...")
+            
             leaveLoginModal()
           }, 3000);
           setLoginState(-1)

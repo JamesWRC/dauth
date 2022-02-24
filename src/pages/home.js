@@ -10,7 +10,7 @@ import { useSearchParams, useParams } from "react-router-dom";
 import SignupSuccess from '../components/SignupSuccess';
 import AuthedContend from '../components/authedContent';
 import LogoutModal from '../components/logoutModal';
-
+import FAQ from '../components/faq'
 function Home() {
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -91,7 +91,7 @@ function Home() {
                   <div class="sm:col-span-1 space-y-5 md:space-y-8">
                     <h1 class="text-4xl sm:text-5xl xl:text-7xl font-semibold">Dauth</h1>
                     <h2 className="inline-block text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight dark:text-slate-700"> Decentralized authentication</h2>
-                    <p class="text-s md:text-2xl">Crypto wallet + simple cryptography = passwordless authentication that <a className="font-extrabold underline underline-offset-4"> you</a> control.</p>
+                    <p class="text-s md:text-2xl">Crypto wallet + simple cryptography = passwordless authentication that <a className="font-extrabold underline underline-offset-8"> you</a> control.</p>
                     <div class="flex justify-center space-x-8 lg:py-12">
                       <button onClick={() => setShowLogin(true)} type="button" class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700  hover:bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         &nbsp;&nbsp;Sign In&nbsp;&nbsp;
@@ -127,7 +127,7 @@ function Home() {
                   <p class="text-lg md:text-xl">
                     This is a simple service that removes the need for annoying, outdated, often unsecure and mostly unnecessary sign up and login forms.
                     <br /><br />
-                    One service quickly becking a backbone of modern security is <a href="https://haveibeenpwned.com/" className="text-sky-600">HaveIBeenPwned</a>, a service with over 11 Billion leaked passwords, email addresses and other personal data.
+                    One service quickly becoming a backbone of modern security is <a href="https://haveibeenpwned.com/" className="text-sky-600">HaveIBeenPwned</a>, a service with over 11 Billion leaked passwords, email addresses and other personal data.
                     <br /><br />
                     With Dauth you can remove the need for emails & passwords for each site you use. Quickly and easily use one or multiple wallets for authentication, using your desktop or your mobile with Metamask!
 
@@ -195,7 +195,15 @@ function Home() {
                 </div>
               </div>
             </section>
+            <div class="container mx-auto sm:px-4">
+              <hr class="bg-gray-400" />
+            </div>
+
             {/* <!-- End Features --> */}
+            {<FAQ/>}
+            <div class="container mx-auto sm:px-4">
+              <hr class="bg-gray-400" />
+            </div>
 
             {isAuthed ? <AuthedContend /> : null}
             <section class="container mx-auto md:px-5 py-24">

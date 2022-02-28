@@ -82,7 +82,7 @@ export default function SignUp() {
   const [searchParams, setSearchParams] = useSearchParams()
   var userOnMobile = searchParams.get("m") // if users i using mobile to authenticate
   var otk = searchParams.get("otk") // get the one time key
-
+  var dev = searchParams.get("dev")
   const navigate = useNavigate();
   if(!otk){
     otk = uuidv4()
@@ -178,6 +178,8 @@ export default function SignUp() {
 
 
     async function sendMessage(otk, message, userOnMobile){
+      alert('sending message')
+      alert()
       if(userOnMobile !== 't'){
         return
       }
@@ -288,7 +290,8 @@ export default function SignUp() {
 
 
     function showMobileQRCode() {
-      const qrCodeURL = `${METAMASK_BASE_LINK}/dauth.dev/signup/?m=t&otk=${currOtk}`
+      var domain = 'dauth.dev'
+      const qrCodeURL = `${METAMASK_BASE_LINK}/${domain}/signup/?m=t&otk=${currOtk}`
       const qrCodeParent = $("#metamask-logo-parent");
       QRCode.toCanvas(document.getElementById('authQRCodeCanvas'), qrCodeURL, {
         errorCorrectionLevel: 'H',

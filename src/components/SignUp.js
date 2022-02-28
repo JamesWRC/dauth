@@ -194,7 +194,7 @@ export default function SignUp() {
       }).then(response => response.json())
         .then(async (data) => {
           alert("api req")
-          alert(data)
+          alert(JSON.stringify(data))
           console.log(data)
           if(data.numMessages > 1 && message.mobileConnected === true){
             window.close()

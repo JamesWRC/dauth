@@ -178,8 +178,6 @@ export default function SignUp() {
 
 
     async function sendMessage(otk, message, userOnMobile){
-      alert('sending message')
-      alert()
       if(userOnMobile !== 't'){
         return
       }
@@ -249,16 +247,19 @@ export default function SignUp() {
       });
     }else if(!ethereum){
       var ws = new W3CWebSocket(`wss://${WEB_SOCKET}/ws/${otk}`);
-
+      console.log(ws)
       ws.onmessage = async function (event) {
         const json = JSON.parse(event.data);
         console.log(`Data received from server web socket: ${JSON.stringify(json)}`);
         try{
-        if(json.payload.hasOwnProperty('msg') && json.payload.msg.mobileConnected === true){
+        if((json.payload.hasOwnProperty('msg') && json.payload.msg.mobileConnected === true) || 
+        (json.payload.hasOwnProperty('message') && json.payload.message.mobileConnected === true)) {
           setSignUpStep(0)
-        }else if(json.payload.hasOwnProperty('msg') && json.payload.msg.mobileSignRequest === true){
+        }else if((json.payload.hasOwnProperty('msg') && json.payload.msg.mobileSignRequest === true) || 
+        (json.payload.hasOwnProperty('message') && json.payload.message.mobileSignRequest === true)){
           setSignUpStep(1)
-        }else if(json.payload.hasOwnProperty('msg') && json.payload.msg.mobileSignedMessage === true){
+        }else if((json.payload.hasOwnProperty('msg') && json.payload.msg.mobileSignedMessage === true) ||
+        (json.payload.hasOwnProperty('message') && json.payload.message.mobileSignedMessage === true)){
           setSignUpStep(2)
         }else if(json.payload.hasOwnProperty('logInMessage') && json.payload.logInSuccess){
           setSignUpStep(3)
